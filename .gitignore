@@ -7,8 +7,7 @@ __pycache__/
 *.so
 
 # my data
-Origin/*
-Compressed/*
+Compressed/
 
 # Distribution / packaging
 .Python
