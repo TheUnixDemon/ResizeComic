@@ -14,7 +14,7 @@ targetDir: str = argument.getPath()
 path: Path = Path(targetDir)
 paths: list[str] = path.getPaths()
 
-compress: Compress = Compress(argument.getQuality())
+compress: Compress = Compress(argument.getQuality(), argument.getMaxWidth())
 for path in paths:
     # handles files that ends with a compression ending declared within formats
     endsWith: str = os.path.splitext(path)[1]

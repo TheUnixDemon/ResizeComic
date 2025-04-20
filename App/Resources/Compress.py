@@ -3,8 +3,9 @@ import os
 
 # check the type and more ...
 class Compress:
-    def __init__(self, quality: int):
+    def __init__(self, quality: int, maxWidth: int):
         self.__quality: int = quality
+        self.__maxWidth: int = maxWidth
 
     def compressImage(self, path: str):
         # skips file if not image
@@ -19,7 +20,8 @@ class Compress:
                     img = img.convert("RGB")
                 convertPath: str = f"{os.path.splitext(path)[0]}.jpeg"
                 convertPathTemp: str = f"{convertPath}.temp"
-                img.save(convertPathTemp, format = "JPEG", quality = self.__quality)
+                img: Image = self.downScale(img) # scaled down image
+                img.save(convertPathTemp, format = "JPEG", quality = self.__quality, optimize = True)
             # checks if origin or new compression is more effizient and saves only that version
             if self.isSmaller(path, convertPathTemp):
                 self.__cleanup(path)
@@ -36,6 +38,17 @@ class Compress:
         if convert < origin:
             return True
         return False
+    
+    # returns the original values if under maxWidth; if not scales down
+    def downScale(self, img: Image) -> Image:
+        width = img.width
+        height = img.height
+        print(width)
+        if width > self.__maxWidth and self.__maxWidth != 0:
+            ratio = self.__maxWidth / float(width)
+            new_height = int(height * ratio)
+            img = img.resize((self.__maxWidth, new_height), Image.LANCZOS)
+        return img
 
     def __verifyFormat(self):
         try:
